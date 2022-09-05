@@ -1,0 +1,59 @@
+Target: 00, MAE: 0.03010 ± 0.05762
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/alpha/checkpoint
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/alpha/ckpt.data-00000-of-00002
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/alpha/ckpt.data-00001-of-00002
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/alpha/ckpt.index
+
+
+
+Target: 01, MAE: 0.04452 ± 0.12621
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/homo/checkpoint
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/homo/ckpt.data-00000-of-00002
+
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/homo/ckpt.data-00001-of-00002
+
+
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/homo/ckpt.index
+Target: 02, MAE: 26.65527 ± 37.54472
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/lumo/checkpoint
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/lumo/ckpt.data-00000-of-00002
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/lumo/ckpt.data-00001-of-00002
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/lumo/ckpt.index
+Target: 03, MAE: 18.98770 ± 29.05853
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/r2/checkpoint
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/r2/ckpt.data-00000-of-00002
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/r2/ckpt.data-00001-of-00002
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/r2/ckpt.index
+Target: 05, MAE: 0.30753 ± 0.73061
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/zpve/checkpoint
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/zpve/ckpt.data-00000-of-00002
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/zpve/ckpt.data-00001-of-00002
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/zpve/ckpt.index
+Target: 06, MAE: 1.26830 ± 2.08202
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/U0/checkpoint
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/U0/ckpt.data-00000-of-00002
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/U0/ckpt.data-00001-of-00002
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/U0/ckpt.index
+Target: 07, MAE: 7.27118 ± 14.37804
+
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/U/checkpoint
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/U/ckpt.data-00000-of-00002
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/U/ckpt.data-00001-of-00002
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/U/ckpt.index
+Target: 08, MAE: 7.20681 ± 13.53750
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/H/checkpoint
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/H/ckpt.data-00000-of-00002
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/H/ckpt.data-00001-of-00002
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/H/ckpt.index
+Target: 09, MAE: 6.89907 ± 12.02104
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/G/checkpoint
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/G/ckpt.data-00000-of-00002
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/G/ckpt.data-00001-of-00002
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/G/ckpt.index
+Target: 10, MAE: 7.93376 ± 14.27838
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/Cv/checkpoint
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/Cv/ckpt.data-00000-of-00002
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/Cv/ckpt.data-00001-of-00002
+Downloading https://github.com/klicperajo/dimenet/raw/master/pretrained/dimenet/Cv/ckpt.index
+Target: 11, MAE: 0.02343 ± 0.02542
+

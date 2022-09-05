@@ -5,20 +5,42 @@ import torch
 
 from torch_geometric.datasets import QM9
 from torch_geometric.loader import DataLoader
-from torch_geometric.nn import DimeNet, DimeNetPlusPlus
+from torch_geometric.nn import DimeNet#, DimeNetPlusPlus
 
-parser = argparse.ArgumentParser()
-parser.add_argument('--use_dimenet_plus_plus', action='store_true')
-args = parser.parse_args()
+import sys
+#parser = argparse.ArgumentParser()
+#parser.add_argument('--use_dimenet_plus_plus', action='store_true')
+#args = parser.parse_args()
 
-Model = DimeNetPlusPlus if args.use_dimenet_plus_plus else DimeNet
+from torch_geometric.nn import radius_graph
+
+def debug_code(data, z, pos, batch):
+    #print(data)
+    #print(data.pos)
+
+    edge_index = radius_graph(pos, r=5.0, batch=batch, max_num_neighbors=32)
+
+    print(edge_index.shape)
+
+    i, j, idx_i, idx_j, idx_k, idx_kj, idx_ji = self.triplets(
+        edge_index, num_nodes=z.size(0))
+
+    ## Calculate distances.
+    dist = (pos[i] - pos[j]).pow(2).sum(dim=-1).sqrt()
+    print("hi, the end")
+    sys.exit()
+
+
+
+#Model = DimeNetPlusPlus if args.use_dimenet_plus_plus else DimeNet
+Model = DimeNet#PlusPlus if args.use_dimenet_plus_plus else DimeNet
 
 path = osp.join(osp.dirname(osp.realpath(__file__)), '..', 'data', 'QM9')
 dataset = QM9(path)
 
 # DimeNet uses the atomization energy for targets U0, U, H, and G, i.e.:
 # 7 -> 12, 8 -> 13, 9 -> 14, 10 -> 15
-idx = torch.tensor([0, 1, 2, 3, 4, 5, 6, 12, 13, 14, 15, 11])
+idx = torch.tensor([0, 1, 2, 3, 4, 5, 6, 12, 13, 14, 15, 11]) #12 no.
 dataset.data.y = dataset.data.y[:, idx]
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -32,6 +54,11 @@ for target in range(12):
     model, datasets = Model.from_qm9_pretrained(path, dataset, target)
     train_dataset, val_dataset, test_dataset = datasets
 
+    test_dd = test_dataset.data
+    #print(test_dd.x.shape, test_dd.y.shape, test_dd.z.shape)
+    #print(test_dd.z.shape, test_dd.pos.shape)#, test_dd.batch.shape)
+    #sys.exit()
+
     model = model.to(device)
     loader = DataLoader(test_dataset, batch_size=256)
 
@@ -39,6 +66,9 @@ for target in range(12):
     for data in loader:
         data = data.to(device)
         with torch.no_grad():
+
+            debug_code(data, data.z, data.pos, data.batch)
+
             pred = model(data.z, data.pos, data.batch)
         mae = (pred.view(-1) - data.y[:, target]).abs()
         maes.append(mae)
