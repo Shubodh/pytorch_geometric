@@ -69,7 +69,9 @@ def debug_code(data, z, pos, batch):
         edge_index, num_nodes=z.size(0))
 
     ## Calculate distances.
+    print(edge_index.shape)
     print(i.shape, j.shape, idx_i.shape, idx_j.shape, idx_k.shape, idx_kj.shape, idx_ji.shape) # 12008, 12008, rest all 25062 #didn't understand shape of latter, but since it's angle of a triplet, it has to be different than "edge" or dist.shape
+    sys.exit()
     dist = (pos[i] - pos[j]).pow(2).sum(dim=-1).sqrt()
     pos_i = pos[idx_i]
     pos_ji, pos_ki = pos[idx_j] - pos_i, pos[idx_k] - pos_i
@@ -143,7 +145,7 @@ for target in range(12):
         data = data.to(device)
         with torch.no_grad():
 
-            #debug_code(data, data.z, data.pos, data.batch)
+            debug_code(data, data.z, data.pos, data.batch)
 
             pred = model(data.z, data.pos, data.batch)
 
@@ -161,6 +163,9 @@ for target in range(12):
     current = paper_results[str(target)]
     print(f'Target: {target:02d}, MAE: {mae.mean():.5f} ± {mae.std():.5f}, paper result: {current[1]}')
     mae_final = str("{:.5f}".format(mae.mean()))  + '+-' + str("{:.5f}".format(mae.std()))
+
+    print(mae.shape, mae.mean())
+    sys.exit()
 
     csv_main_row = [paper_results[str(target)][0], str(paper_results[str(target)][1]), mae_final]
     csv_main.append(csv_main_row) #['property', 'reported result', 'pyg result']
