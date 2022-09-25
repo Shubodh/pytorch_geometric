@@ -54,7 +54,7 @@ def triplets(edge_index, num_nodes):
 def debug_code(data, z, pos, batch):
     #print(data.pos)
 
-    edge_index = radius_graph(pos, r=2.0, batch=batch, max_num_neighbors=32)
+    edge_index = radius_graph(pos, r=5.0, batch=batch, max_num_neighbors=32)
 
     ## Understanding radius_graph: START
     #If I reduce r from 5 to 2.0, edge_index.shape and dist.shape reduces from 70000 to 12000. Also edge_index is different from given edge_index, see below, i.e. you are calculating your own edges using z and  pos alone, NOT using input edge_index or even x for that matter.
@@ -69,7 +69,7 @@ def debug_code(data, z, pos, batch):
         edge_index, num_nodes=z.size(0))
 
     ## Calculate distances.
-    print(edge_index.shape)
+    print(edge_index.shape, z.size(0)) #[2, 12008], 4565 #remember 4565 is number of atoms
     print(i.shape, j.shape, idx_i.shape, idx_j.shape, idx_k.shape, idx_kj.shape, idx_ji.shape) # 12008, 12008, rest all 25062 #didn't understand shape of latter, but since it's angle of a triplet, it has to be different than "edge" or dist.shape
     sys.exit()
     dist = (pos[i] - pos[j]).pow(2).sum(dim=-1).sqrt()
@@ -145,6 +145,8 @@ for target in range(12):
         data = data.to(device)
         with torch.no_grad():
 
+            #print(data.to_namedtuple())
+            #sys.exit()
             debug_code(data, data.z, data.pos, data.batch)
 
             pred = model(data.z, data.pos, data.batch)
