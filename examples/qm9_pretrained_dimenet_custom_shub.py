@@ -92,91 +92,92 @@ def debug_code(data, z, pos, batch):
     sys.exit()
 
 
+if __name__ == '__main__':
 
-#Model = DimeNetPlusPlus if args.use_dimenet_plus_plus else DimeNet
-Model = DimeNet#PlusPlus if args.use_dimenet_plus_plus else DimeNet
+    #Model = DimeNetPlusPlus if args.use_dimenet_plus_plus else DimeNet
+    Model = DimeNet#PlusPlus if args.use_dimenet_plus_plus else DimeNet
 
-path = osp.join(osp.dirname(osp.realpath(__file__)), '..', 'data', 'QM9')
-dataset = QM9(path)
+    path = osp.join(osp.dirname(osp.realpath(__file__)), '..', 'data', 'QM9')
+    dataset = QM9(path)
 
-# DimeNet uses the atomization energy for targets U0, U, H, and G, i.e.:
-# 7 -> 12, 8 -> 13, 9 -> 14, 10 -> 15
-idx = torch.tensor([0, 1, 2, 3, 4, 5, 6, 12, 13, 14, 15, 11]) #12 no.
-dataset.data.y = dataset.data.y[:, idx]
+    # DimeNet uses the atomization energy for targets U0, U, H, and G, i.e.:
+    # 7 -> 12, 8 -> 13, 9 -> 14, 10 -> 15
+    idx = torch.tensor([0, 1, 2, 3, 4, 5, 6, 12, 13, 14, 15, 11]) #12 no.
+    dataset.data.y = dataset.data.y[:, idx]
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-paper_results = {'0': ['mu', 0.0286], 
-                 '1': ['alpha', 0.0469],
-                 '2' : ['epsilon_HOMO', 27.8],
-                 '3' : ['epsilon_LUMO', 19.7],
-                 '4' : ['Delta epsilon', 34.8],
-                 '5' : ['<R^2>', 0.331],
-                 '6' : ['ZPVE', 1.29],
-                 '7' : ['U_0', 8.02],
-                 '8' : ['U', 7.89],
-                 '9' : ['H', 8.11],
-                 '10' : ['G', 8.98],
-                 '11' : ['c_v', 0.0249]
-                }
+    paper_results = {'0': ['mu', 0.0286], 
+                    '1': ['alpha', 0.0469],
+                    '2' : ['epsilon_HOMO', 27.8],
+                    '3' : ['epsilon_LUMO', 19.7],
+                    '4' : ['Delta epsilon', 34.8],
+                    '5' : ['<R^2>', 0.331],
+                    '6' : ['ZPVE', 1.29],
+                    '7' : ['U_0', 8.02],
+                    '8' : ['U', 7.89],
+                    '9' : ['H', 8.11],
+                    '10' : ['G', 8.98],
+                    '11' : ['c_v', 0.0249]
+                    }
 
-csv_fields = ['property', 'reported result', 'pyg result']
-csv_main = []
+    csv_fields = ['property', 'reported result', 'pyg result']
+    csv_main = []
 
-for target in range(12):
-    # Skip target \delta\epsilon, since it can be computed via
-    # \epsilon_{LUMO} - \epsilon_{HOMO}:
-    if target == 4:
-        continue
+    for target in range(12):
+        # Skip target \delta\epsilon, since it can be computed via
+        # \epsilon_{LUMO} - \epsilon_{HOMO}:
+        if target == 4:
+            continue
 
-    model, datasets = Model.from_qm9_pretrained(path, dataset, target)
-    train_dataset, val_dataset, test_dataset = datasets
+        model, datasets = Model.from_qm9_pretrained(path, dataset, target)
+        train_dataset, val_dataset, test_dataset = datasets
 
-    test_dd = test_dataset.data
-    #print(test_dd.x.shape, test_dd.y.shape, test_dd.z.shape)
-    #print(test_dd.z.shape, test_dd.pos.shape)#, test_dd.batch.shape)
-    #sys.exit()
+        test_dd = test_dataset.data
+        #print(test_dd.x.shape, test_dd.y.shape, test_dd.z.shape)
+        #print(test_dd.z.shape, test_dd.pos.shape)#, test_dd.batch.shape)
+        #sys.exit()
 
-    model = model.to(device)
-    loader = DataLoader(test_dataset, batch_size=256)
+        model = model.to(device)
+        loader = DataLoader(test_dataset, batch_size=256)
 
-    maes = []
-    for data in loader:
-        data = data.to(device)
-        with torch.no_grad():
+        maes = []
+        for data in loader:
+            data = data.to(device)
+            with torch.no_grad():
 
-            #print(data.to_namedtuple())
-            #sys.exit()
-            debug_code(data, data.z, data.pos, data.batch)
+                #print(data.to_namedtuple())
+                #sys.exit()
+                debug_code(data, data.z, data.pos, data.batch)
 
-            pred = model(data.z, data.pos, data.batch)
+                pred = model(data.z, data.pos, data.batch)
 
-            #print(pred.shape)
-            #sys.exit()
-        mae = (pred.view(-1) - data.y[:, target]).abs()
-        maes.append(mae)
+                #print(pred.shape)
+                #sys.exit()
+            mae = (pred.view(-1) - data.y[:, target]).abs()
+            maes.append(mae)
 
-    mae = torch.cat(maes, dim=0)
+        mae = torch.cat(maes, dim=0)
 
-    # Report meV instead of eV:
-    mae = 1000 * mae if target in [2, 3, 4, 6, 7, 8, 9, 10] else mae
+        # Report meV instead of eV:
+        mae = 1000 * mae if target in [2, 3, 4, 6, 7, 8, 9, 10] else mae
 
-    #print(f'Target: {target:02d}, MAE: {mae.mean():.5f} ± {mae.std():.5f}')
-    current = paper_results[str(target)]
-    print(f'Target: {target:02d}, MAE: {mae.mean():.5f} ± {mae.std():.5f}, paper result: {current[1]}')
-    mae_final = str("{:.5f}".format(mae.mean()))  + '+-' + str("{:.5f}".format(mae.std()))
+        #print(f'Target: {target:02d}, MAE: {mae.mean():.5f} ± {mae.std():.5f}')
+        current = paper_results[str(target)]
+        print(f'Target: {target:02d}, MAE: {mae.mean():.5f} ± {mae.std():.5f}, paper result: {current[1]}')
+        mae_final = str("{:.5f}".format(mae.mean()))  + '+-' + str("{:.5f}".format(mae.std()))
 
-    print(mae.shape, mae.mean())
-    sys.exit()
+        print(mae.shape, mae.mean())
+        sys.exit()
 
-    csv_main_row = [paper_results[str(target)][0], str(paper_results[str(target)][1]), mae_final]
-    csv_main.append(csv_main_row) #['property', 'reported result', 'pyg result']
-    print(csv_main_row)
+        csv_main_row = [paper_results[str(target)][0], str(paper_results[str(target)][1]), mae_final]
+        csv_main.append(csv_main_row) #['property', 'reported result', 'pyg result']
+        print(csv_main_row)
 
-print(csv_fields)
-print(csv_main)
-filename = "saved_results.csv"
-with open(filename, 'w') as csvfile: 
-    csvwriter = csv.writer(csvfile) 
-    csvwriter.writerow(csv_fields) 
-    csvwriter.writerows(csv_main)
+    print(csv_fields)
+    print(csv_main)
+    filename = "saved_results.csv"
+    with open(filename, 'w') as csvfile: 
+        csvwriter = csv.writer(csvfile) 
+        csvwriter.writerow(csv_fields) 
+        csvwriter.writerows(csv_main)
