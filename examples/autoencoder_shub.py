@@ -7,6 +7,7 @@ import torch_geometric.transforms as T
 from torch_geometric.datasets import Planetoid
 from torch_geometric.nn import GAE, VGAE, GCNConv
 
+print("NOTE: Moved this file to learn_mol/vae/examples/autoencoder_pyg.py")
 parser = argparse.ArgumentParser()
 parser.add_argument('--variational', action='store_true')
 parser.add_argument('--linear', action='store_true')
@@ -108,3 +109,5 @@ for epoch in range(1, args.epochs + 1):
     auc, ap = test(test_data)
     print(f'Epoch: {epoch:03d}, AUC: {auc:.4f}, AP: {ap:.4f}')
 print(model)
+#TODO: 
+# 1. Add latent space visualization (PCA, t-SNE, UMAP, etc.)
